@@ -1,0 +1,23 @@
+rules:
+  - id: andina-no-usar-eval
+    languages: [javascript]
+    severity: ERROR
+    message: >-
+      No se permite eval ni new Function: si reciben datos del usuario permiten
+      ejecutar código arbitrario en el servidor.
+    pattern-either:
+      - pattern: eval(...)
+      - pattern: new Function(...)
+  - id: andina-comando-con-datos-externos
+    languages: [javascript]
+    severity: ERROR
+    message: >-
+      Comando del sistema armado con datos variables: riesgo de inyección de
+      comandos. Usar execFile con argumentos separados.
+    patterns:
+      - pattern-either:
+          - pattern: require('child_process').exec($CMD, ...)
+          - pattern: $CP.exec($CMD, ...)
+          - pattern: $CP.execSync($CMD, ...)
+      - pattern-not: $CP.exec("...", ...)
+      - pattern-not: $CP.execSync("...", ...)

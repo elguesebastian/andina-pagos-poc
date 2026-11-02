@@ -1,0 +1,8 @@
+node_modules
+.git
+.github
+test
+*.sarif
+*.json.bak
+zap
+sbom.cdx.json

@@ -1,0 +1,18 @@
+{
+  "name": "andina-pagos-poc",
+  "version": "1.0.0",
+  "description": "Prueba de concepto: pipeline con controles SAST, SCA y DAST para la billetera virtual de Andina Pagos.",
+  "main": "src/server.js",
+  "scripts": {
+    "start": "node src/server.js",
+    "test": "node --test test/*.test.js"
+  },
+  "engines": {
+    "node": ">=20"
+  },
+  "license": "MIT",
+  "private": true,
+  "dependencies": {
+    "ms": "2.1.3"
+  }
+}
