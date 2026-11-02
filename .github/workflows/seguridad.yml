@@ -70,14 +70,14 @@ jobs:
             anchore/syft:latest scan dir:/src -o cyclonedx-json=/src/sbom.cdx.json
       - name: Reporte de vulnerabilidades (SARIF)
         run: |
-          mkdir -p "$RUNNER_TEMP/grype-db"
+          mkdir -p "$RUNNER_TEMP/grype-db" "$RUNNER_TEMP/grype-tmp"
           docker run --rm --user "$(id -u):$(id -g)" -e HOME=/tmp -e GRYPE_DB_CACHE_DIR=/grype-db \
-            -v "$RUNNER_TEMP/grype-db:/grype-db" -v "$PWD:/src" \
+            -v "$RUNNER_TEMP/grype-db:/grype-db" -v "$RUNNER_TEMP/grype-tmp:/tmp" -v "$PWD:/src" \
             anchore/grype:latest sbom:/src/sbom.cdx.json -o sarif --file /src/grype.sarif
       - name: Bloquear si hay vulnerabilidades altas o críticas
         run: |
           docker run --rm --user "$(id -u):$(id -g)" -e HOME=/tmp -e GRYPE_DB_CACHE_DIR=/grype-db \
-            -v "$RUNNER_TEMP/grype-db:/grype-db" -v "$PWD:/src" \
+            -v "$RUNNER_TEMP/grype-db:/grype-db" -v "$RUNNER_TEMP/grype-tmp:/tmp" -v "$PWD:/src" \
             anchore/grype:latest sbom:/src/sbom.cdx.json --fail-on high
       - name: Verificar licencias
         run: node scripts/licencias.js sbom.cdx.json
