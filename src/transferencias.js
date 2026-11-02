@@ -1,6 +1,8 @@
 // Módulo simulado de transferencias de la billetera.
 // Los datos se guardan en memoria: es una aplicación de ejemplo para la POC.
 
+const _ = require('lodash');
+
 const cuentas = new Map([
   ['AP-0001', { titular: 'Cuenta de prueba 1', saldo: 150000 }],
   ['AP-0002', { titular: 'Cuenta de prueba 2', saldo: 80000 }],
@@ -39,7 +41,9 @@ function validarTransferencia(solicitud) {
   return null;
 }
 
-function transferir(solicitud) {
+function transferir(datos) {
+  // Combina la solicitud con los valores por defecto (por ejemplo, la moneda).
+  const solicitud = _.merge({ moneda: 'ARS' }, datos);
   const error = validarTransferencia(solicitud);
   if (error) {
     return { ok: false, error };
@@ -47,7 +51,7 @@ function transferir(solicitud) {
   const { origen, destino, monto } = solicitud;
   cuentas.get(origen).saldo -= monto;
   cuentas.get(destino).saldo += monto;
-  return { ok: true, origen, destino, monto, saldoOrigen: cuentas.get(origen).saldo };
+  return { ok: true, origen, destino, monto, moneda: solicitud.moneda, saldoOrigen: cuentas.get(origen).saldo };
 }
 
 module.exports = { consultarSaldo, transferir, validarTransferencia };
